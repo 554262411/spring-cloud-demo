@@ -1,0 +1,10 @@
+#注意：config客户端连接config服务端的配置信息需要在bootstrap.yml中配置
+#如果在application.yml中配置，就会一直读取本地yml中的信息
+#同时注意：从bootstrap.yml中读取的配置信息会直接应用到项目yml中，比如端口号什么的，从服务端读取的信息会直接应用到项目
+#从config服务端获取配置信息后，不需要再本地配置端口信息什么的，会直接应用获取的端口信息
+
+#application.yml应用级别的配置
+#bootstrap.yml系统级别的配置，比application.yml的级别高
+spring:
+  application:
+    name: spring-cloud-config-client

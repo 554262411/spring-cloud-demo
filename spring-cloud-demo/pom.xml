@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <modules>
+        <module>spring-cloud-api</module>
+        <module>provider01</module>
+        <module>consumer01</module>
+        <module>spring-cloud-eureka</module>
+        <module>spring-cloud-zuul</module>
+        <module>spring-cloud-eureka02</module>
+        <module>spring-cloud-config-server</module>
+        <module>spring-cloud-config-client</module>
+    </modules>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.5.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.fundaylei</groupId>
+    <artifactId>demo</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>demo</name>
+    <description>Demo project for Spring Boot</description>
+
+    <!--父级项目用于管理，只能是pom-->
+    <packaging>pom</packaging>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <spring.cloud.version>Hoxton.SR4</spring.cloud.version>
+        <mybatis.version>2.1.2</mybatis.version>
+        <mybatis.pagehelper.version>1.2.13</mybatis.pagehelper.version>
+        <druid.version>1.1.22</druid.version>
+        <swagger2.version>2.9.2</swagger2.version>
+        <jquery.version>3.5.0</jquery.version>
+    </properties>
+
+    <dependencies>
+        <!--默认所有子模块都自动集成webtest依赖-->
+
+        <!--Spring boot web启动依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!--Spring boot test启动依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--引入进来，否则Test测试缺少jar包-->
+        <dependency>
+            <!-- this is needed or IntelliJ gives junit.jar or junit-platform-launcher:1.3.2 not found errors -->
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!--热部署工具，写完代码不用重启应用-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+
+        <!--gson-->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!--parent中springboot已有声明的不需要再声明，直接在子模块生引用即可
+            而有具体的版本号的需要声明-->
+
+            <!--ThymeLeaf模板启动器-->
+            <!--<dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-thymeleaf</artifactId>
+            </dependency>-->
+
+            <!--SpringAOP依赖启动器-->
+            <!--<dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-aop</artifactId>
+            </dependency>-->
+
+            <!--SpringCloud依赖-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--mybatis依赖-->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <!-- pagehelper插件依赖包，mybatis分页插件 -->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${mybatis.pagehelper.version}</version>
+            </dependency>
+
+            <!--oracle依赖-->
+            <!--<dependency>
+                <groupId>com.oracle.ojdbc</groupId>
+                <artifactId>ojdbc8</artifactId>
+                <scope>runtime</scope>
+            </dependency>-->
+            <!--用于解决java.sql.SQLException: 不支持的字符集 (在类路径中添加 orai18n.jar): ZHS16GBK-->
+            <!--其实就是数据库的编码和程序的编码不一致时，需要引用此jar包-->
+            <!--<dependency>
+                <groupId>com.oracle.ojdbc</groupId>
+                <artifactId>orai18n</artifactId>
+            </dependency>-->
+
+            <!--druid数据库连接池-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
+            <!--lombok依赖-->
+            <!--lombok相关依赖-->
+            <!--lombok 提供了简单的注解的形式来帮助我们简化消除一些必须有但显得很臃肿的 java 代码。
+            通过使用对应的注解，可以在编译源码的时候生成对应的方法，所以不会影响任何运行效率。
+            常用注解：@Data，@Slf4j，@Setter，@Getter，@NoArgsConstructor，@AllArgsConstructor等-->
+            <!--<dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <optional>true</optional>
+            </dependency>-->
+
+            <!--swagger依赖-->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger2.version}</version>
+            </dependency>
+
+            <!--webjars依赖-->
+            <!--注意随便引用版本可能会导致和hystrix监控页面中引用的webjars包冲突-->
+            <!--以前引入js等静态资源，是将这些资源下载并手工放入到webapp目录中；
+                而spring boot将这些静态资源直接以jar文件包（maven）的形式引入项目-->
+            <!--<dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>jquery</artifactId>
+                <version>${jquery.version}</version>
+            </dependency>-->
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

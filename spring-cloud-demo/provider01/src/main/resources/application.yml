@@ -1,0 +1,113 @@
+server:
+  port: 8001
+
+#定义日志级别，mybatis输出sql语句
+logging:
+  level:
+    #定义包下的所有日志输出级别
+    demo: debug
+
+#配置mybatis
+mybatis:
+  mapper-locations: classpath:mapping/*Mapping.xml
+  type-aliases-package: demo.entity
+  #config-location: classpath:mybatis-config.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    #开启一级缓存：默认开启，默认是SESSION级别
+    local-cache-scope: session
+    #设置cacheEnabled，开启二级缓存，mapper中开启默认缓存，只需写上cache标签即可。<cache></cache>
+    cache-enabled: true
+
+#配置分页控件pagehelper
+pagehelper:
+  #oracle
+  #helperDialect: Oracle
+  #mysql
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  pageSizeZero: true
+  params: count=countSql
+
+#配置spring
+spring:
+  application:
+    #应用程序名称：如果多个子模块的名称设置成一样，则可以根据Enreka和Ribbon，根据名称实现提供者的负载均衡
+    #名称一样，就可以多个子项目模块根据相同的名称实现负载均衡LB
+    name: provider01
+  datasource:
+#    #oralce
+#    type: com.alibaba.druid.pool.DruidDataSource
+#    driver-class-name: oracle.jdbc.driver.OracleDriver
+#    platform: oracle
+#    url: jdbc:oracle:thin:@192.168.43.26:1521:orcl
+#    username: mytest
+#    password: mytest
+
+    #mysql
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.gjt.mm.mysql.Driver
+    url: jdbc:mysql://localhost:3306/mytest?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC
+    username: root
+    password: root
+    #连接池配置
+    druid:
+      # 指明是否在从池中取出连接前进行检验,如果检验失败, 则从池中去除连接并尝试取出另一个，
+      #注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串
+      test-on-borrow: false
+      # 指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除.
+      #注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串
+      test-while-idle: false
+      # 指明是否在归还到池中前进行检验，注意: 设置为true后如果要生效,
+      #validationQuery参数必须设置为非空字符串
+      test-on-return: false
+      # SQL查询,用来验证从连接池取出的连接,在将连接返回给调用者之前.
+      #如果指定,则查询必须是一个SQL SELECT并且必须返回至少一行记录
+      validation-query: select 1
+
+    #druid:
+    #dbcp2:
+#      test-while-idle: true
+#      #oracle
+#      #validationQuery: SELECT 1 FROM DUAL
+#      #mysql
+#      validation-query: SELECT 1
+#      initialSize: 5
+#      minIdle: 5
+#      maxActive: 20
+#      maxWait: 60000
+#      timeBetweenEvictionRunsMillis: 60000
+#      minEvictableIdleTimeMillis: 300000
+#      validationQuery: SELECT 1 FROM DUAL
+#      testWhileIdle: true
+#      testOnBorrow: false
+#      testOnReturn: false
+
+
+#Eureka配置
+eureka:
+  client:
+    service-url:
+      #注册地址，使用逗号分隔可以配置多个
+      defaultZone: http://localhost:9001/eureka/
+      ##如果是向注册中心的一个集群进行注册
+      ##那我们只需要向其中的任意一台注册中心注册即可
+      ##该注册中心会把请求转发集群内的其他注册中心，（服务同步）
+  instance:
+    #修改eureka上默认描述信息！
+    instance-id: provider01-8001
+    #设置为true时，当鼠标移动到实例名称上时，显示的是IP信息，为false信息时显示为主机名信息
+    prefer-ip-address: true
+
+#配置监控提示信息
+info:
+  app.name: ${spring.application.name}
+  company.name: fundaylei
+
+#熔断器DashBoard：actuator在springboot2.0调整后开关 web端点的配置，”**“代表开启所有
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: "*"

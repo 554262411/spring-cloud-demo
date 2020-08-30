@@ -1,0 +1,30 @@
+server:
+  port: 7001
+
+
+#Eureka配置
+eureka:
+  client:
+    #表示是否向Eureka注册中心注册自己，我是消费者不需要
+    #register-with-eureka: false
+    service-url:
+      #注册地址，使用逗号分隔可以配置多个
+      defaultZone: http://localhost:9001/eureka/
+      ##如果是向注册中心的一个集群进行注册
+      ##那我们只需要向其中的任意一台注册中心注册即可
+      ##该注册中心会把请求转发集群内的其他注册中心，（服务同步）
+  instance:
+    #修改eureka上默认描述信息！
+    instance-id: consume01-7001
+    #设置为true时，当鼠标移动到实例名称上时，显示的是IP信息，为false信息时显示为主机名信息
+    prefer-ip-address: true
+
+#开启服务降级，feign.hystrix
+feign:
+  hystrix:
+    enabled: true
+
+#应用程序名称
+spring:
+  application:
+    name: comsumer01

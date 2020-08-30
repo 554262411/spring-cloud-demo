@@ -1,0 +1,18 @@
+server:
+  port: 9001
+
+#Eureka配置
+eureka:
+  instance:
+    #Eureka服务端的实例名称
+    hostname: localhost
+  client:
+    #表示是否向Eureka注册中心注册自己，服务端不需要注册自己，客户端才需要
+    register-with-eureka: false
+    #fetch-registry如果为false，则表示自己为注册中心
+    fetch-registry: false
+    service-url:
+      #监控页面，集群：注意一点：IP地址不能全部为localhost，否则它认为是一个，形不成集群
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/,http://127.0.0.1:9002/eureka/
+
+
